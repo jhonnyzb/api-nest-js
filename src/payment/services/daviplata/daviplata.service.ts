@@ -21,8 +21,8 @@ const agent = new https.Agent({
 @Injectable()
 export class DaviplataService {
 
-    constructor(@InjectEntityManager('payment') private paymentManager: EntityManager, private configService: ConfigService) { }
- 
+    constructor(@InjectEntityManager('payment') private paymentManager: EntityManager, private configService: ConfigService,) { }
+
     async auth() {
         const data = new URLSearchParams({
             grant_type: 'client_credentials',
@@ -112,87 +112,91 @@ export class DaviplataService {
 
     async confirm(params: ConfirmDaviplataDto) {
         const data = {
-          otp: params.otp,
-          idSessionToken: params.idSessionToken,
-          idComercio: this.configService.get('IDCOMERCIO'),
-          idTerminal: this.configService.get('IDTERMINAL'),
-          idTransaccion: Math.floor(Math.random() * (999999 - 1 + 1)) + 1,
+            otp: params.otp,
+            idSessionToken: params.idSessionToken,
+            idComercio: this.configService.get('IDCOMERCIO'),
+            idTerminal: this.configService.get('IDTERMINAL'),
+            idTransaccion: Math.floor(Math.random() * (999999 - 1 + 1)) + 1,
         };
         const options = {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + params.token,
-            'Content-Type': 'application/json',
-            'x-ibm-client-id': this.configService.get('CLIENT_ID'),
-          },
-          body: JSON.stringify(data),
-          agent
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.token,
+                'Content-Type': 'application/json',
+                'x-ibm-client-id': this.configService.get('CLIENT_ID'),
+            },
+            body: JSON.stringify(data),
+            agent
         };
         const id_transaccion = uuidv4();
         try {
-          const resp = await fetch(this.configService.get('URL_BASE_DAVIPLATA') + '/daviplata/v1/confirmarCompra', options);
-          const responseData = await resp.json();
-          console.log(responseData);
-          responseData.codePay = id_transaccion;
-          if (responseData.estado) {
-            if (responseData.estado == 'Aprobado') {
-              const pay: Payment = {
-                parque_id: params.formPse.parkSelected,
-                servicio_id: params.formPse.serviceParkSelected,
-                identificacion: params.formPse.document,
-                tipo_identificacion: this.getTypeDocument(params.formPse.documentTypeSelected),
-                codigo_pago: id_transaccion,
-                id_transaccion_pse: 'DAVIPLATA-' + responseData.numAprobacion,
-                tipo_persona: this.getTypePerson(params.formPse.typePersonSelected),
-                razon_social: params.formPse.socialReason ? params.formPse.socialReason.toUpperCase() : null,
-                codigo_verificacion: params.formPse.codeVerification ? params.formPse.codeVerification : null,
-                direccion: params.formPse.address.toUpperCase(),
-                email: params.formPse.email.toUpperCase(),
-                nombre: params.formPse.name.toUpperCase(),
-                apellido: params.formPse.lastName.toUpperCase(),
-                telefono: params.formPse.phone,
-                // info payer
-                tipo_persona_pagador: params.formPse.typePersonSelectedPayer ? this.getTypePerson(params.formPse.typePersonSelectedPayer): null,
-                razon_social_pagador: params.formPse.socialReasonPayer ? params.formPse.socialReasonPayer.toUpperCase() : null,
-                direccion_pagador:  params.formPse.addressPayer ? params.formPse.addressPayer.toUpperCase(): null,
-                tipo_identificacion_pagador: params.formPse.documentTypeSelectedPayer ? this.getTypeDocument(params.formPse.documentTypeSelectedPayer): null,
-                identificacion_pagador:  params.formPse.documentPayer ? params.formPse.documentPayer : null,
-                email_pagador: params.formPse.emailPayer ? params.formPse.emailPayer : null,
-                nombre_pagador: params.formPse.namePayer ? params.formPse.namePayer : null,
-                apellido_pagador: params.formPse.lastNamePayer ? params.formPse.lastNamePayer : null,
-                telefono_pagador: params.formPse.phonePayer ? params.formPse.phonePayer : null,
-                codigo_banco_seleccionado: '1551',
-                estado_id: 2,
-                estado_banco: 'OK',
-                concepto: params.formPse.concept.toUpperCase(),
-                moneda: 'COP',
-                total: params.formPse.totalPay,
-                iva: 0,
-                permiso: params.formPse.permitNumber,
-                tipo_permiso: params.formPse.permitTypeSelected,
-                id_reserva: params.formPse.reservationId,
-                fecha_pago: null,
-                user_id_pse: 'DAVIPLATA' + params.formPse.document,
-                medio_id: 6,
-                created_at: new Date(),
-                updated_at: new Date()
-              }
-              const payment = this.paymentManager.create(Payment, pay);
-              await this.paymentManager.save(payment);
-              return this.response(HttpStatus.OK, 'OK', 'Transacción confirmar compra, sin error en el flujo', responseData, false);
+            const resp = await fetch(this.configService.get('URL_BASE_DAVIPLATA') + '/daviplata/v1/confirmarCompra', options);
+            const responseData = await resp.json();
+            console.log(responseData);
+            responseData.codePay = id_transaccion;
+            if (responseData.estado) {
+                if (responseData.estado == 'Aprobado') {
+                    const pay: Payment = {
+                        parque_id: params.formPse.parkSelected,
+                        servicio_id: params.formPse.serviceParkSelected,
+                        identificacion: params.formPse.document,
+                        tipo_identificacion: this.getTypeDocument(params.formPse.documentTypeSelected),
+                        codigo_pago: id_transaccion,
+                        id_transaccion_pse: 'DAVIPLATA-' + responseData.numAprobacion,
+                        tipo_persona: this.getTypePerson(params.formPse.typePersonSelected),
+                        razon_social: params.formPse.socialReason ? params.formPse.socialReason.toUpperCase() : null,
+                        codigo_verificacion: params.formPse.codeVerification ? params.formPse.codeVerification : null,
+                        direccion: params.formPse.address.toUpperCase(),
+                        email: params.formPse.email.toUpperCase(),
+                        nombre: params.formPse.name.toUpperCase(),
+                        apellido: params.formPse.lastName.toUpperCase(),
+                        telefono: params.formPse.phone,
+                        // info payer
+                        tipo_persona_pagador: params.formPse.typePersonSelectedPayer ? this.getTypePerson(params.formPse.typePersonSelectedPayer) : null,
+                        razon_social_pagador: params.formPse.socialReasonPayer ? params.formPse.socialReasonPayer.toUpperCase() : null,
+                        direccion_pagador: params.formPse.addressPayer ? params.formPse.addressPayer.toUpperCase() : null,
+                        tipo_identificacion_pagador: params.formPse.documentTypeSelectedPayer ? this.getTypeDocument(params.formPse.documentTypeSelectedPayer) : null,
+                        identificacion_pagador: params.formPse.documentPayer ? params.formPse.documentPayer : null,
+                        email_pagador: params.formPse.emailPayer ? params.formPse.emailPayer : null,
+                        nombre_pagador: params.formPse.namePayer ? params.formPse.namePayer : null,
+                        apellido_pagador: params.formPse.lastNamePayer ? params.formPse.lastNamePayer : null,
+                        telefono_pagador: params.formPse.phonePayer ? params.formPse.phonePayer : null,
+                        codigo_banco_seleccionado: '1551',
+                        estado_id: 2,
+                        estado_banco: 'OK',
+                        concepto: params.formPse.concept.toUpperCase(),
+                        moneda: 'COP',
+                        total: params.formPse.totalPay,
+                        iva: 0,
+                        permiso: params.formPse.permitNumber,
+                        tipo_permiso: params.formPse.permitTypeSelected,
+                        id_reserva: params.formPse.reservationId,
+                        fecha_pago: new Date(),
+                        user_id_pse: 'DAVIPLATA' + params.formPse.document,
+                        medio_id: 6,
+                        created_at: new Date(),
+                        updated_at: new Date()
+                    }
+                    const payment = this.paymentManager.create(Payment, pay);
+                    await this.paymentManager.save(payment);
+                    return this.response(HttpStatus.OK, 'OK', 'Transacción confirmar compra, sin error en el flujo', responseData, false);
+                } else {
+                    return this.response(HttpStatus.FORBIDDEN, 'Error', 'Error en la transacción', null, false);
+                }
             } else {
-              return this.response(HttpStatus.FORBIDDEN, 'Error', 'Error en la transacción', null, false);
+                return this.response(HttpStatus.FORBIDDEN, 'Error', 'Error en la transacción', responseData, false);
             }
-          } else {
-            return this.response(HttpStatus.FORBIDDEN, 'Error', 'Error en la transacción', responseData, false);
-          }
         } catch (error) {
-          console.log(error);
-    
-          return this.response(HttpStatus.INTERNAL_SERVER_ERROR, 'Error', 'Error en el servidor, intenta nuevamente', error, true);
+            console.log(error);
+
+            return this.response(HttpStatus.INTERNAL_SERVER_ERROR, 'Error', 'Error en el servidor, intenta nuevamente', error, true);
         }
-      }
+    }
+
+    async getPaymentById(codePay: string): Promise<Payment | undefined> {
+        return this.paymentManager.findOne(Payment, { where: { codigo_pago : codePay} });
+    }
 
     response(statusCode = null, status = '', message = '', data = '', Error = false) {
         const resp = { statusCode, status, message, data, Error }

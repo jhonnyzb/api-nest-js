@@ -33,4 +33,10 @@ export class DaviplataController {
       const response = await this.daviplataService.confirm(params);
       res.status(response.statusCode).json(response);
     }
+
+    @Post('get-transaction')
+    async getTransaction(@Body() params: any, @Res() res: Response): Promise<any> {
+      const response = await this.daviplataService.getPaymentById(params.codePay);
+      res.status(200).json(response);
+    }
 }

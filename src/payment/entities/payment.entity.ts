@@ -104,7 +104,7 @@ export class Payment {
   id_reserva: number;
 
   @Column()
-  fecha_pago: string;
+  fecha_pago:  Date;
 
   @Column()
   user_id_pse: string;
