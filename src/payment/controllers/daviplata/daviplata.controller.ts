@@ -27,9 +27,9 @@ export class DaviplataController {
     @Post('buy-daviplata')
     async buy(@Body() params: BuyDaviplataDto, @Res() res: Response): Promise<any> {
       console.log('aquii', params);
-      
-      const response = await this.daviplataService.buy(params);
-      res.status(response.statusCode).json(response);
+      res.status(200).json({response: 'hola'});
+      // const response = await this.daviplataService.buy(params);
+      // res.status(response.statusCode).json(response);
     }
 
     @Post('otp-daviplata')
