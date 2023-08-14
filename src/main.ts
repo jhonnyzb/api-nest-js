@@ -10,12 +10,13 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule, { bodyParser: true });
   app.setGlobalPrefix('daviplata');
-  app.enableCors({
-    "origin": "*",
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "preflightContinue": false,
-    "optionsSuccessStatus": 204
-  });
+  app.enableCors();
+  // app.enableCors({
+  //   "origin": "*",
+  //   "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  //   "preflightContinue": false,
+  //   "optionsSuccessStatus": 204
+  // });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

@@ -12,12 +12,15 @@ export class DaviplataController {
 
     @Get('auth-daviplata')
     async auth(@Res() res: Response): Promise<any> {
+        console.log('aquii1');
         const response = await this.daviplataService.auth();
         res.status(response.statusCode).json(response);
     }
 
     @Post('buy-daviplata')
     async buy(@Body() params: BuyDaviplataDto, @Res() res: Response): Promise<any> {
+      console.log('aquii', params);
+      
       const response = await this.daviplataService.buy(params);
       res.status(response.statusCode).json(response);
     }
