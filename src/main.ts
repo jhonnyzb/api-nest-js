@@ -9,7 +9,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule, { bodyParser: true });
-  //app.setGlobalPrefix('daviplata');
+  app.setGlobalPrefix('daviplata');
   app.enableCors();
   // app.enableCors({
   //   "origin": "*",

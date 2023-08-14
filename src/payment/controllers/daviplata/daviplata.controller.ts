@@ -18,11 +18,10 @@ export class DaviplataController {
     }
 
     @Get('buy-daviplata')
-     prueba(@Res() res: Response): string {
+     prueba(@Res() res: Response) {
         console.log('aquii3');
-        return 'hola';
         // const response = await this.daviplataService.auth();
-        // res.status(response.statusCode).json(response);
+        res.status(200).json({response: 'hola'});
     }
 
     @Post('buy-daviplata')
