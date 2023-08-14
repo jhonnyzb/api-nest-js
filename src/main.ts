@@ -10,7 +10,11 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('daviplata');
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: ['content-type'],
+    origin: 'http://localhost:43513',
+    credentials: true,
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -19,8 +23,6 @@ async function bootstrap() {
   );
 
   // app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
-  console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
   if (process.env.NODE_ENV !== 'prod') {
     const config = new DocumentBuilder()
       .setTitle('API SIM ')
