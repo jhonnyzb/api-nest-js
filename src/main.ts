@@ -8,12 +8,13 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   dotenv.config();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: true });
   app.setGlobalPrefix('daviplata');
   app.enableCors({
-    allowedHeaders: ['content-type'],
-    origin: 'http://localhost:43513',
-    credentials: true,
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
   });
   app.useGlobalPipes(
     new ValidationPipe({
