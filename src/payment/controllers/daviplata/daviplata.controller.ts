@@ -24,7 +24,7 @@ export class DaviplataController {
     //     res.status(200).json({response: 'hola'});
     // }
 
-    @Post('buy-daviplata')
+    @Get('buy-daviplata')
     async buy(@Body() params: BuyDaviplataDto, @Res() res: Response): Promise<any> {
       console.log('aquii', params);
       res.status(200).json({response: 'hola'});
