@@ -133,7 +133,6 @@ export class DaviplataService {
         try {
             const resp = await fetch(this.configService.get('URL_BASE_DAVIPLATA') + '/daviplata/v1/confirmarCompra', options);
             const responseData = await resp.json();
-            console.log(responseData);
             responseData.codePay = id_transaccion;
             if (responseData.estado) {
                 if (responseData.estado == 'Aprobado') {
